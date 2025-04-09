@@ -1,4 +1,10 @@
-package com.example.tasks;
+package src.main;
+
+import com.example.tasks.Task;
+import com.example.tasks.Epic;
+import com.example.tasks.Subtask;
+import com.example.tasks.Status;
+import com.example.manager.TaskManager;
 
 import java.util.List;
 
@@ -7,7 +13,8 @@ public class Main {
         TaskManager manager = TaskManager.getInstance();
 
         Task task1 = new Task("Переезд", "Организовать переезд");
-        Task task2 = new Task("Покупка квартиры", "Найти и купить новую квартиру");
+        Task task2;
+        task2 = new Task("Покупка квартиры", "Найти и купить новую квартиру");
         Epic epic1 = new Epic("Семейный праздник", "Организация семейного праздника");
         Subtask subtask1 = new Subtask("Купить подарки", "Купить подарки для друзей", epic1.getId());
         Subtask subtask2 = new Subtask("Приготовить еду", "Приготовить еду для праздника", epic1.getId());

@@ -20,11 +20,7 @@ public class Epic extends Task {
     }
 
     public void removeSubtaskId(int subtaskId) {
-        subtasksIds.removeIf(id -> id == subtaskId);
-    }
-
-    @Override
-    public void setStatus(Status status) {
+        subtasksIds.remove((Integer) subtaskId);
     }
 
     public Status calculateStatus() {
@@ -35,8 +31,8 @@ public class Epic extends Task {
         boolean allDone = true;
         boolean anyInProgress = false;
 
-        for (int subtaskId : subtasksIds) {
-            Task subtask = TaskManager.getInstance().findTaskById(subtaskId);
+        for (Integer subtaskId : subtasksIds) {
+            com.example.tasks.Task subtask = com.example.manager.TaskManager.getInstance().findTaskById(subtaskId);
             if (subtask.getStatus() == Status.IN_PROGRESS) {
                 anyInProgress = true;
             }

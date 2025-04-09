@@ -1,9 +1,16 @@
-package com.example.tasks;
+package com.example.manager;
 
-import java.util.*;
+import com.example.tasks.Task;
+import com.example.tasks.Epic;
+import com.example.tasks.Subtask;
+import com.example.tasks.Status;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskManager {
-    private static TaskManager instance;
     private Map<Integer, Task> tasks;
     private Map<Integer, Epic> epics;
     private Map<Integer, Subtask> subtasks;
@@ -17,13 +24,10 @@ public class TaskManager {
     }
 
     public static TaskManager getInstance() {
-        if (instance == null) {
-            instance = new TaskManager();
-        }
-        return instance;
+        return new TaskManager();
     }
 
-    public int getNextId() {
+    private int getNextId() {
         return ++lastId;
     }
 
@@ -64,17 +68,22 @@ public class TaskManager {
     public void createSubtask(Subtask subtask) {
         subtask.setId(getNextId());
         subtasks.put(subtask.getId(), subtask);
+        Epic epic = findEpicById(subtask.getEpicId());
+        if (epic != null) {
+            epic.addSubtaskId(subtask.getId());
+        }
     }
 
     public void deleteTask(int id) {
         Task task = tasks.remove(id);
         if (task instanceof Epic) {
-            ((Epic) task).getSubtasksIds().forEach(this::deleteSubtask);
-        }
-        if (task instanceof Subtask) {
-            Epic epic = findEpicById(((Subtask) task).getEpicId());
+            Epic epic = (Epic) task;
+            epic.getSubtasksIds().forEach(this::deleteSubtask);
+        } else if (task instanceof Subtask) {
+            Subtask subtask = (Subtask) task;
+            Epic epic = findEpicById(subtask.getEpicId());
             if (epic != null) {
-                epic.removeSubtaskId(id);
+                epic.removeSubtaskId(subtask.getId());
             }
         }
     }
@@ -91,7 +100,7 @@ public class TaskManager {
         if (subtask != null) {
             Epic epic = findEpicById(subtask.getEpicId());
             if (epic != null) {
-                epic.removeSubtaskId(id);
+                epic.removeSubtaskId(subtask.getId());
             }
         }
     }
@@ -116,5 +125,11 @@ public class TaskManager {
             }
         }
         return result;
+    }
+
+    public void clearAllTasks() {
+        tasks.clear();
+        epics.clear();
+        subtasks.clear();
     }
 }
