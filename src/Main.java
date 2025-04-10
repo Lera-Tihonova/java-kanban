@@ -10,12 +10,12 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = TaskManager.getInstance();
+        TaskManager manager = new TaskManager();
 
         Task task1 = new Task("Переезд", "Организовать переезд");
         Task task2;
         task2 = new Task("Покупка квартиры", "Найти и купить новую квартиру");
-        Epic epic1 = new Epic("Семейный праздник", "Организация семейного праздника");
+        Epic epic1 = new Epic("Семейный праздник", "Организация семейного праздника", manager);
         Subtask subtask1 = new Subtask("Купить подарки", "Купить подарки для друзей", epic1.getId());
         Subtask subtask2 = new Subtask("Приготовить еду", "Приготовить еду для праздника", epic1.getId());
 

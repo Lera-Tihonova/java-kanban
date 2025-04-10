@@ -1,14 +1,18 @@
 package com.example.tasks;
 
+import com.example.manager.TaskManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
     private final List<Integer> subtasksIds;
+    private final TaskManager manager;
 
-    public Epic(String title, String description) {
+    public Epic(String title, String description, TaskManager manager) {
         super(title, description);
         this.subtasksIds = new ArrayList<>();
+        this.manager = manager;
     }
 
     public List<Integer> getSubtasksIds() {
@@ -32,7 +36,7 @@ public class Epic extends Task {
         boolean anyInProgress = false;
 
         for (Integer subtaskId : subtasksIds) {
-            com.example.tasks.Task subtask = com.example.manager.TaskManager.getInstance().findTaskById(subtaskId);
+            Task subtask = manager.findTaskById(subtaskId);
             if (subtask.getStatus() == Status.IN_PROGRESS) {
                 anyInProgress = true;
             }

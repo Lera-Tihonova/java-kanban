@@ -16,15 +16,11 @@ public class TaskManager {
     private Map<Integer, Subtask> subtasks;
     private int lastId;
 
-    private TaskManager() {
+    public TaskManager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
         lastId = 0;
-    }
-
-    public static TaskManager getInstance() {
-        return new TaskManager();
     }
 
     private int getNextId() {
@@ -75,17 +71,7 @@ public class TaskManager {
     }
 
     public void deleteTask(int id) {
-        Task task = tasks.remove(id);
-        if (task instanceof Epic) {
-            Epic epic = (Epic) task;
-            epic.getSubtasksIds().forEach(this::deleteSubtask);
-        } else if (task instanceof Subtask) {
-            Subtask subtask = (Subtask) task;
-            Epic epic = findEpicById(subtask.getEpicId());
-            if (epic != null) {
-                epic.removeSubtaskId(subtask.getId());
-            }
-        }
+        tasks.remove(id);
     }
 
     public void deleteEpic(int id) {
@@ -129,7 +115,15 @@ public class TaskManager {
 
     public void clearAllTasks() {
         tasks.clear();
+    }
+
+    public void clearAllEpics() {
         epics.clear();
+        epics.values().stream().mapToInt(Epic::getId).forEach(this::deleteSubtask);
+    }
+
+    public void clearAllSubtasks() {
         subtasks.clear();
     }
 }
+
