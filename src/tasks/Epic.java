@@ -1,5 +1,4 @@
 package com.example.tasks;
-
 import com.example.manager.TaskManager;
 
 import java.util.ArrayList;
@@ -7,12 +6,10 @@ import java.util.List;
 
 public class Epic extends Task {
     private final List<Integer> subtasksIds;
-    private final TaskManager manager;
 
-    public Epic(String title, String description, TaskManager manager) {
+    public Epic(String title, String description) {
         super(title, description);
         this.subtasksIds = new ArrayList<>();
-        this.manager = manager;
     }
 
     public List<Integer> getSubtasksIds() {
@@ -27,7 +24,7 @@ public class Epic extends Task {
         subtasksIds.remove((Integer) subtaskId);
     }
 
-    public Status calculateStatus() {
+    public Status calculateStatus(List<Subtask> subtasks) {
         if (subtasksIds.isEmpty()) {
             return Status.NEW;
         }
@@ -35,12 +32,17 @@ public class Epic extends Task {
         boolean allDone = true;
         boolean anyInProgress = false;
 
-        for (Integer subtaskId : subtasksIds) {
-            Task subtask = manager.findTaskById(subtaskId);
-            if (subtask.getStatus() == Status.IN_PROGRESS) {
+        for (int subtaskId : subtasksIds) {
+            Subtask subtask = subtasks.stream()
+                    .filter(st -> st.getId() == subtaskId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (subtask != null && subtask.getStatus() == Status.IN_PROGRESS) {
                 anyInProgress = true;
             }
-            if (subtask.getStatus() != Status.DONE) {
+
+            if (subtask != null && subtask.getStatus() != Status.DONE) {
                 allDone = false;
             }
         }
@@ -54,13 +56,18 @@ public class Epic extends Task {
         }
     }
 
+    public void updateStatus(TaskManager manager) {
+        List<Subtask> subtasks = manager.getSubtasksOfEpic(getId());
+        setStatus(calculateStatus(subtasks));
+    }
+
     @Override
     public String toString() {
         return "Epic{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", status=" + calculateStatus() +
+                ", status=" + getStatus() +
                 ", subtasksIds=" + subtasksIds +
                 '}';
     }

@@ -13,9 +13,9 @@ public class Main {
         TaskManager manager = new TaskManager();
 
         Task task1 = new Task("Переезд", "Организовать переезд");
-        Task task2;
-        task2 = new Task("Покупка квартиры", "Найти и купить новую квартиру");
-        Epic epic1 = new Epic("Семейный праздник", "Организация семейного праздника", manager);
+        Task task2 = new Task("Покупка квартиры", "Найти и купить новую квартиру");
+
+        Epic epic1 = new Epic("Семейный праздник", "Организация семейного праздника");
         Subtask subtask1 = new Subtask("Купить подарки", "Купить подарки для друзей", epic1.getId());
         Subtask subtask2 = new Subtask("Приготовить еду", "Приготовить еду для праздника", epic1.getId());
 
@@ -40,7 +40,7 @@ public class Main {
         subtask1.setStatus(Status.IN_PROGRESS);
         subtask2.setStatus(Status.DONE);
 
-        epic1.setStatus(epic1.calculateStatus());
+        epic1.updateStatus(manager);
 
         System.out.println("\nОбновленные данные:");
         System.out.println("Эпик: " + epic1);

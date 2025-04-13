@@ -119,11 +119,11 @@ public class TaskManager {
 
     public void clearAllEpics() {
         epics.clear();
-        epics.values().stream().mapToInt(Epic::getId).forEach(this::deleteSubtask);
+        subtasks.clear();
     }
 
     public void clearAllSubtasks() {
         subtasks.clear();
+        epics.values().forEach(epic -> epic.getSubtasksIds().clear());
     }
 }
-
