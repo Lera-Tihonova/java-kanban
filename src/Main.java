@@ -40,8 +40,6 @@ public class Main {
         subtask1.setStatus(Status.IN_PROGRESS);
         subtask2.setStatus(Status.DONE);
 
-        epic1.updateStatus(manager);
-
         System.out.println("\nОбновленные данные:");
         System.out.println("Эпик: " + epic1);
         System.out.println("Подзадача 1: " + subtask1);
